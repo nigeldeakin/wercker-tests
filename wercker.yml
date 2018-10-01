@@ -193,7 +193,16 @@ test-docker-build2:
             else 
                 echo "Test failed: container did not respond"
                 exit 1
-            fi      
+            fi   
+    - script:
+        name: Install docker
+        code: apk --no-cache add docker           
+    - script:
+        name: Explore the docker daemon 
+        code: |
+          docker ps -a
+          echo Listing the network
+          docker network ls | grep "w-" | awk ' { print $1; } ' | xargs docker network inspect           
   after-steps:
     - nigeldeakin/pagerduty-notifier:
         service-key: $PAGERDUTY_SERVICE_KEY
