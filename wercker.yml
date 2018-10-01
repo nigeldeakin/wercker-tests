@@ -203,8 +203,8 @@ test-docker-build2:
           docker ps -a
           echo Listing the network
           docker network ls | grep "w-" | awk ' { print $1; } ' | xargs docker network inspect   
-          echo cat /etc/hosts
-          cat /etc/hosts        
+          echo cat /etc/resolv.conf
+          cat /etc/resolv.conf       
   after-steps:
     - nigeldeakin/pagerduty-notifier:
         service-key: $PAGERDUTY_SERVICE_KEY
