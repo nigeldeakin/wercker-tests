@@ -104,6 +104,7 @@ build:
 test-docker-build1:
   # Test that we can run the docker-build step, test it using docker-run and then push it to a repo
   box: alpine:edge
+  docker: true
   steps:
     - script:
         name: Get the a unique id for the run, common to all pipelines in the workflow
@@ -158,6 +159,7 @@ test-docker-build2:
   # Test the docker-build step (part 2)
   # Test that we can pull the newly-created image, start it as a service, and connect to it
   box: alpine:edge
+  docker: true
   services: 
     - name: test-docker-build-container
       id: docker.io/$USERNAME/wercker-test-$PROD_OR_STAGING:test-docker-build
