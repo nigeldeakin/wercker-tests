@@ -459,12 +459,13 @@ test-docker-build-ocir-1:
     - script:
         name: Display input to docker-push
         code: |    
-          echo image-name: my-new-image
-          echo username: $OCIR_USERNAME 
-          echo password: $OCIR_AUTH_TOKEN 
-          echo repository: $OCIR_REPOSITORY_NAME
-          echo registry: $OCIR_REGISTRY_NAME
-          echo tag: latest  
+          #
+          echo image-name=my-new-image
+          echo username=$OCIR_USERNAME 
+          echo password=$OCIR_AUTH_TOKEN 
+          echo repository=$OCIR_REPOSITORY_NAME
+          echo registry=$OCIR_REGISTRY_NAME
+          echo tag=latest       
     - internal/docker-push:    
         image-name: my-new-image
         username: $OCIR_USERNAME 
