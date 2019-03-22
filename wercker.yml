@@ -470,8 +470,8 @@ test-docker-build-ocir-1:
         image-name: my-new-image
         username: $OCIR_USERNAME 
         password: $OCIR_AUTH_TOKEN 
-        registry: $OCIR_REPOSITORY_NAME
-        repository: $OCIR_REGISTRY_NAME
+        repository: $OCIR_REPOSITORY_NAME
+        registry: $OCIR_REGISTRY_NAME
         tag: latest  
   after-steps:
     - nigeldeakin/pagerduty-notifier:
