@@ -456,6 +456,15 @@ test-docker-build-ocir-1:
           # Note that we convert PROD_OR_STAGING to lower case
           export OCIR_REPOSITORY_NAME=$OCI_REGION.ocir.io/$OCI_TENANCY_NAME/wercker-tests/test-docker-build-ocir${PROD_OR_STAGING,,}
           echo OCIR_REPOSITORY_NAME=$OCIR_REPOSITORY_NAME
+    - script:
+        name: Display input to docker-push
+        code: |    
+          echo image-name: my-new-image
+          echo username: $OCIR_USERNAME 
+          echo password: $OCIR_AUTH_TOKEN 
+          echo repository: $OCIR_REPOSITORY_NAME
+          echo registry: $OCIR_REGISTRY_NAME
+          echo tag: latest  
     - internal/docker-push:    
         image-name: my-new-image
         username: $OCIR_USERNAME 
