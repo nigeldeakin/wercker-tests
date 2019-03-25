@@ -471,7 +471,7 @@ test-docker-build-ocir-1:
         username: $OCIR_USERNAME 
         password: $OCIR_AUTH_TOKEN 
         repository: $OCIR_REPOSITORY_NAME
-        registry: $OCIR_REGISTRY_NAME
+        registry: $OCIR_REGISTRY_NAME/v2
         tag: latest  
   after-steps:
     - nigeldeakin/pagerduty-notifier:
