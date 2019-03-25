@@ -462,14 +462,14 @@ test-docker-build-ocir-1:
           #
           echo image-name=my-new-image
           echo username=$OCIR_USERNAME 
-          echo password=x$OCIR_AUTH_TOKEN 
+          echo password=$OCIR_AUTH_TOKEN 
           echo repository=$OCIR_REPOSITORY_NAME
           echo registry=$OCIR_REGISTRY_NAME
           echo tag=latest       
     - internal/docker-push:    
         image-name: my-new-image
         username: $OCIR_USERNAME 
-        password: $OCIR_AUTH_TOKEN 
+        password: x$OCIR_AUTH_TOKEN 
         repository: $OCIR_REPOSITORY_NAME
         registry: $OCIR_REGISTRY_NAME
         tag: latest  
