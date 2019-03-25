@@ -448,7 +448,7 @@ test-docker-build-ocir-1:
     - script:
         name: Construct OCIR registry name 
         code: |
-          export OCIR_REGISTRY_NAME=https://$OCI_REGION.ocir.io/v2
+          export OCIR_REGISTRY_NAME=https://$OCI_REGION.ocir.io/v2/v2
           echo OCIR_REGISTRY_NAME=$OCIR_REGISTRY_NAME
     - script:
         name: Construct OCIR repository name 
@@ -471,7 +471,7 @@ test-docker-build-ocir-1:
         username: $OCIR_USERNAME 
         password: $OCIR_AUTH_TOKEN 
         repository: $OCIR_REPOSITORY_NAME
-        registry: $OCIR_REGISTRY_NAME/v2
+        registry: $OCIR_REGISTRY_NAME
         tag: latest  
   after-steps:
     - nigeldeakin/pagerduty-notifier:
