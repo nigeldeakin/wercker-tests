@@ -363,10 +363,8 @@ test-docker-build-ecr-2:
           export ECR_PASSWORD=`aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d | cut -d: -f2`
     - internal/docker-run:
         image: $ECR_REGISTRY/$REPOSITORY_NAME:latest
-        aws-access-key: $AWS_ACCESS_KEY_ID
-        aws-secret-key: $AWS_SECRET_ACCESS_KEY
-        aws-region: $AWS_REGION
-        aws-registry-id: $AWS_REGISTRY_ID
+        username: $ECR_USERNAME 
+        password: $ECR_PASSWORD 
         name: myTestContainer
     - script: 
         name: Wait for container to start 
