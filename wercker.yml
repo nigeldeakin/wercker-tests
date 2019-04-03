@@ -1,4 +1,14 @@
 workflows:   
+  - name: test-docker-build1
+    pipelines:
+      - name: build
+      #
+      - name: test-docker-build1
+        requires:
+          - build
+      - name: test-docker-build2
+        requires:
+          - test-docker-build1          
   - name: tests
     pipelines:
       - name: build
@@ -110,11 +120,13 @@ build:
         name: Run the unit tests
         code: |
           go test ./... 
+    - script:
+        name: env at end of main steps
+        code: env | grep -i proxy || true       
   after-steps:
-    - nigeldeakin/pagerduty-notifier:
-        service-key: $PAGERDUTY_SERVICE_KEY
-        notify-on: $PAGERDUTY_NOTIFY_ON
-        branch: $PAGERDUTY_BRANCH               
+    - script:
+        name: env in after-steps
+        code: env | grep -i proxy || true      
 test-docker-build1:
   # Test that we can run the docker-build step, test it using docker-run and then push it to a Docker Hub repo
   box: alpine:3.9
@@ -132,6 +144,12 @@ test-docker-build1:
     - internal/docker-run:
         image: my-new-image
         name: myTestContainer
+    - internal/docker-run:
+        image: mongo
+        name: myMongoContainer        
+    - script:
+        name: env after containers started
+        code: env | grep -i proxy || true            
     - script:
         name: Install Curl
         code: apk --no-cache add curl 
@@ -163,11 +181,13 @@ test-docker-build1:
         password: $PASSWORD # Docker Hub password. When using CLI, set using "export X_PASSWORD=<password>" 
         repository: docker.io/$USERNAME/wercker-test-$PROD_OR_STAGING
         tag: test-docker-build  
+    - script:
+        name: env at end of main steps
+        code: env | grep -i proxy || true       
   after-steps:
-    - nigeldeakin/pagerduty-notifier:
-        service-key: $PAGERDUTY_SERVICE_KEY
-        notify-on: $PAGERDUTY_NOTIFY_ON
-        branch: $PAGERDUTY_BRANCH
+    - script:
+        name: env in after-steps
+        code: env | grep -i proxy || true       
 test-docker-build2:
   # Test the docker-build step (part 2)
   # Test that we can pull the newly-created image, start it as a service, and connect to it
@@ -175,6 +195,8 @@ test-docker-build2:
   services: 
     - name: test-docker-build-container
       id: docker.io/$USERNAME/wercker-test-$PROD_OR_STAGING:test-docker-build
+    - name: myMongoService
+      id: mongo
   steps:
     - script:
         name: Get the a unique id for the run, common to all pipelines in the workflow
@@ -206,11 +228,13 @@ test-docker-build2:
                 echo "Test failed: container did not respond"
                 exit 1
             fi      
+    - script:
+        name: env at end of main steps
+        code: env | grep -i proxy || true       
   after-steps:
-    - nigeldeakin/pagerduty-notifier:
-        service-key: $PAGERDUTY_SERVICE_KEY
-        notify-on: $PAGERDUTY_NOTIFY_ON
-        branch: $PAGERDUTY_BRANCH     
+    - script:
+        name: env in after-steps
+        code: env | grep -i proxy || true      
 test-docker-build-ecr-1:
   # This is part 1 of a two-part test, and should be followed by test-docker-build-ecr-2
   # Test that we can run the docker-build step, test it using docker-run and then push it to a Amazon ECR repo
@@ -360,6 +384,11 @@ test-docker-build-ecr-2:
         code: |          
           export ECR_USERNAME=AWS
           export ECR_PASSWORD=`aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d | cut -d: -f2`
+    - script:
+        name: Dump properties for docker-run
+        code: |
+          echo image=$ECR_REGISTRY/$REPOSITORY_NAME:latest
+          echo username=$ECR_USERNAME
     - internal/docker-run:
         image: $ECR_REGISTRY/$REPOSITORY_NAME:latest
         username: $ECR_USERNAME 
